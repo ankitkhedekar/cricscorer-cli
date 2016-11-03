@@ -1,18 +1,14 @@
 var co = require('co');
 var prompt = require('co-prompt');
-
 var program = require('commander');
 
-var score =  {
-  runs: 0,
-  balls: 0
-}
+var ScoreBook = require('./models/score');
+var score;
 
 program
   .command('runs')
   .action(function(){
     scoreUp(1);
-    showScore();
     process.stdin.pause();
   });
 
@@ -26,21 +22,27 @@ startScoring();
 
 co(function *(){
   var command;
+  score = new ScoreBook();
+  showScore();
   while(true){
     command = yield prompt('> ');
     var progArgs = ["", ""];
     progArgs = progArgs.concat(command.split(" "));
     program.parse(progArgs);
   }
-});
+}).then(function (value) {
+  console.log(value);
+}, function (err) {
+  console.error(err.stack);
+});;
 
 function scoreUp(runs){
-  score.runs += parseInt(runs);
-  score.balls++;
+  score.addScore(runs, true, false);
+  showScore();
 }
 
 function showScore(){
-  console.log(score);
+  console.log(score.showScore());
 }
 
 function startScoring(){
