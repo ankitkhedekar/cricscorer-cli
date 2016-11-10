@@ -6,9 +6,13 @@ var ScoreBook = require('./models/score');
 var score;
 
 program
-  .command('runs')
-  .action(function(){
-    scoreUp(1);
+  .option('-w, --wicket', 'If wicket has fallen')
+  .option('-e, --extra', 'If ball is counted')
+
+program
+  .command('runs <runs>')
+  .action(function(runs){
+    scoreUp(parseInt(runs), program.extra, program.wicket);
     process.stdin.pause();
   });
 
@@ -36,8 +40,8 @@ co(function *(){
   console.error(err.stack);
 });;
 
-function scoreUp(runs){
-  score.addScore(runs, true, false);
+function scoreUp(runs, isExtra, isWicket){
+  score.addScore(runs, isExtra, isWicket);
   showScore();
 }
 

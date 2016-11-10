@@ -12,12 +12,12 @@ Score.prototype.showScore = function(){
   return "Runs:" + this.runs + "/" + this.wickets + " Overs:" + convertBallsToOvers(this.balls);
 }
 
-Score.prototype.addScore = function(runs, ballCount, wicket){
+Score.prototype.addScore = function(runs, isExtra, wicket){
   this.runs += runs;
   if(wicket){
     this.wickets++;
   }
-  if(ballCount){
+  if(isExtra === undefined){
     this.balls++;
   }
 }
