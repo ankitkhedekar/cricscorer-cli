@@ -2,8 +2,8 @@ var co = require('co');
 var prompt = require('co-prompt');
 var program = require('commander');
 
-var ScoreBook = require('./models/score');
-var score;
+var Match = require('./models/match');
+var book;
 
 program
   .option('-w, --wicket', 'If wicket has fallen')
@@ -13,6 +13,8 @@ program
   .command('runs <runs>')
   .action(function(runs){
     scoreUp(parseInt(runs), program.extra, program.wicket);
+    delete program.extra;
+    delete program.wicket;
     process.stdin.pause();
   });
 
@@ -26,8 +28,7 @@ startScoring();
 
 co(function *(){
   var command;
-  score = new ScoreBook();
-  showScore();
+  book = new Match();
   while(true){
     command = yield prompt('> ');
     var progArgs = ["", ""];
@@ -41,12 +42,7 @@ co(function *(){
 });;
 
 function scoreUp(runs, isExtra, isWicket){
-  score.addScore(runs, isExtra, isWicket);
-  showScore();
-}
-
-function showScore(){
-  console.log(score.showScore());
+  book.tick(runs, isExtra, isWicket);
 }
 
 function startScoring(){
@@ -55,6 +51,5 @@ function startScoring(){
 
 function endScoring(){
   console.log("---END---");
-  showScore();
   process.exit(0);
 }
