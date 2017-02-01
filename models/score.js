@@ -15,7 +15,7 @@ Score.prototype.addScore = function(runs, isExtra, wicket){
   if(wicket){
     this.wickets++;
   }
-  if(isExtra === undefined){
+  if(!isExtra){
     if(this.balls === 5){
       this.overs++;
       this.balls = 0;
